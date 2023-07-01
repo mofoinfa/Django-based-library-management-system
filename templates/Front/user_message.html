@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>修改用户信息</title>\
+    <script src="/static/after/js/jquery-1.9.1.min.js"></script>
+    <link rel="stylesheet" href="/static/front/css/index.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f1f1f1;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-top: 30px;
+        }
+        form {
+            margin: 30px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+            border-radius: 5px;
+            max-width: 600px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f9f9f9;
+            font-weight: normal;
+        }
+        input[type="text"], input[type="number"], input[type="file"], select, textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            box-sizing: border-box;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+        input[type="submit"]:hover {
+            background-color: #3e8e41;
+        }
+    </style>
+</head>
+<body>
+<div id="top">
+    <div id="top_right">
+        <a href="{% url 'front:update_user' %}">我的账户</a>|
+        <a href="{% url 'front:quit' %}">退出</a>
+    </div>
+</div>
+<div class="clear"></div>
+<div id="menu">
+    <a class="all" href="{% url 'front:index' %}">首页</a>
+    {% for bookbategory in bookbategorys %}
+        <a href="{% url 'front:book' %}?id={{ bookbategory.id }}">{{ bookbategory.name }}</a>
+    {% endfor %}
+    <a class="all" href="{% url 'front:book' %}?id=120000000000000000" onclick="postData()">最新书籍</a>
+</div>
+<form action="{% url 'after:update_book' %} }" method="POST" id="image-form">
+    {% csrf_token %}
+    <table>
+        <tr>
+            <th>ID</th>
+            <td><input type="text" name="id" value="{{ user.id }}" readonly></td>
+        </tr>
+        <tr>
+            <th>用户名</th>
+            <td><input type="text" value="{{ user.username}}" readonly></td>
+        </tr>
+        <tr>
+            <th>邮箱</th>
+            <td><input type="text" id="email" name="email" value="{{ user.email}}"></td>
+        </tr>
+        <tr>
+            <th>密码</th>
+            <td><input type="text" id="password" name="password" value="{{ user.password}}"></td>
+        </tr>
+        <tr>
+            <th>姓名</th>
+            <td><input type="text" name="name" id="name" value="{{ user.name}}" readonly></td>
+        </tr>
+        <tr>
+            <td colspan="2"><input type="submit" value="提交"></td>
+        </tr>
+    </table>
+</form>
+<div id="bottom">
+    <div id="bottom_right">
+        <span>版权所有 新课教育    @mofoinfa </span>
+    </div>
+</div>
+</body>
+<script>
+    //修改书籍
+    $(document).ready(function() {
+        $('#image-form').submit(function(event) {
+            event.preventDefault();
+            var formData = new FormData(this);
+            $.ajax({
+                url: '{% url 'front:update_user' %}',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    console.log(response);
+                    alert('修改成功')
+                    window.location = '{% url 'front:index' %}';
+                },
+                error: function(xhr, status, error) {
+                    console.log(error);
+                }
+            });
+        });
+    });
+</script>
+</html>
+

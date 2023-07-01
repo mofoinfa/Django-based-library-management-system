@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>悦文书店-{{ name }}分类</title>
+    <link href="/static/after/assets/css/bootstrap.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="/static/after/assets/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="/static/after/css/style.css"/>
+    <link rel="stylesheet" href="/static/after/assets/css/ace.min.css"/>
+    <link rel="stylesheet" href="/static/after/font/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="/static/front/css/index.css">
+    <link rel="stylesheet" href="/static/front/css/paging.css">
+</head>
+<body>
+<div id="page">
+    <div id="top">
+        <div id="top_right">
+            <a href="{% url 'front:update_user' %}">我的账户</a>|
+            <a href="{% url 'front:quit' %}">退出</a>
+        </div>
+    </div>
+    <div class="clear"></div>
+    <div id="menu">
+        <a class="all" href="{% url 'front:index' %}">首页</a>
+        {% for bookbategory in bookbategorys %}
+            <a href="{% url 'front:book' %}?id={{ bookbategory.id }}">{{ bookbategory.name }}</a>
+        {% endfor %}
+        <a class="all" href="{% url 'front:book' %}?id=120000000000000000" onclick="postData()">最新书籍</a>
+    </div>
+    <div id="search">
+        <form method="POST" action="{% url 'front:select_book' %}">
+            <input type="text" id="contant" name="content"/>
+            <input type="submit" value="搜索">
+        </form>
+    </div>
+    <div id="content">
+        <div id="content_top">
+            <span>首页 > {{ name }} > 图书列表 </span>
+        </div>
+        <div id="content_bottom">
+            <h1>商品目录</h1>
+            <hr/>
+            <h1>{{ name }}</h1>
+            <span>共{{ books|length }}种商品</span>
+            <hr/>
+            <div id="productlist">
+                {% for book in books %}
+                    <div class="book">
+                        <div class="bookimg">
+                            <img alt="" src="/static/images/cover/{{ book.bookImage }}">
+                        </div>
+                        <div class="bookIntr">
+                            <span>书名：{{ book.bookname }}</span><br/>
+                            <span>售价：{{ book.bookprice }}</span>
+                        </div>
+                    </div>
+                {% endfor %}
+                <div class="clear"></div>
+            </div>
+            <div class="pagination">
+                {% if books.has_other_pages %}
+                    <div class="pagination">
+                        {% if books.has_previous %}
+                            <a href="?page={{ books.previous_page_number }}">&laquo;</a>
+                        {% else %}
+                            <span class="disabled">&laquo;</span>
+                        {% endif %}
+
+                        {% for num in books.paginator.page_range %}
+                            {% if books.number == num %}
+                                <span class="active">{{ num }}</span>
+                            {% elif num > books.number|add:'-5' and num < books.number|add:'5' %}
+                                <a href="?page={{ num }}">{{ num }}</a>
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if books.has_next %}
+                            <a href="?page={{ books.next_page_number }}">&raquo;</a>
+                        {% else %}
+                            <span class="disabled">&raquo;</span>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+<div id="bottom">
+    <div id="bottom_left">
+        <img alt="" src="images/logo.png">
+    </div>
+    <div id="bottom_right">
+        <span>版权所有 新课教育    @mofoinfa </span>
+    </div>
+</div>
+</div>
+</body>
+</html>
