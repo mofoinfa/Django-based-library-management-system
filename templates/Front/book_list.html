@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>悦文书店-{{ book.bookname }}</title>
+    <link href="/static/after/assets/css/bootstrap.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="/static/after/assets/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="/static/after/css/style.css"/>
+    <link rel="stylesheet" href="/static/after/assets/css/ace.min.css"/>
+    <link rel="stylesheet" href="/static/after/font/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="/static/front/css/index.css">
+    <link rel="stylesheet" href="/static/front/css/paging.css">
+    <link rel="stylesheet" href="/static/front/css/booklist.css">
+</head>
+<body>
+<div id="page">
+    <div id="top">
+        <div id="top_right">
+            <a href="{% url 'front:update_user' %}">我的账户</a>|
+            <a href="{% url 'front:quit' %}">退出</a>
+        </div>
+    </div>
+    <div class="clear"></div>
+    <div id="menu">
+        <a class="all" href="{% url 'front:index' %}">首页</a>
+        {% for bookbategory in bookbategorys %}
+            <a href="{% url 'front:book' %}?id={{ bookbategory.id }}">{{ bookbategory.name }}</a>
+        {% endfor %}
+        <a class="all" href="{% url 'front:book' %}?id=120000000000000000" onclick="postData()">最新书籍</a>
+    </div>
+    <div id="search">
+        <form method="POST" action="{% url 'front:select_book' %}">
+            <input type="text" id="contant" name="content"/>
+            <input type="submit" value="搜索">
+        </form>
+    </div>
+    <div id="content" class="content" style="margin: 8px 20px 15px;">
+        <figure>
+            <img src="/static/images/cover/{{ book.bookImage }}" alt="活着"   align="left" style="width: 250px;height: 350px;"/>
+            <h1>{{ book.bookname }}</h1><br><br>
+            <p><span class="p2">&nbsp;&nbsp;&nbsp;&nbsp;价格：</span><span class="p1">&yen;{{ book.bookprice }}</span></p><br>
+            <p class="p2">作者：{{ book.author }}&nbsp;&nbsp;</p><br>
+            <p class="p2">出版社：{{ book.press }}&nbsp;&nbsp;</p><br>
+            <p class="p2">上架时间：{{ book.created_time }}<br></p><br>
+            <p class="p2">分类{{ book.category.name }}<br></p><br>
+            <p class="p2">库存：{{ book.inventory }}<br></p><br>
+        </figure>
+        <div class="discuss">
+            <h1 class="hh1">作品评价</h1>
+            <hr size="5" color="lightblue">
+            <blockquote class="p3">{{ book.descrition }}</blockquote>
+        </div>
+
+    </div>
+    <div id="bottom">
+
+        <div id="bottom_right">
+            <span>版权所有 新课教育    @mofoinfa </span>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+
+

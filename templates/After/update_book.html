@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>修改图书信息</title>\
+    <script src="/static/after/js/jquery-1.9.1.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f1f1f1;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-top: 30px;
+        }
+        form {
+            margin: 30px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+            border-radius: 5px;
+            max-width: 600px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f9f9f9;
+            font-weight: normal;
+        }
+        input[type="text"], input[type="number"], input[type="file"], select, textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            box-sizing: border-box;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+        input[type="submit"]:hover {
+            background-color: #3e8e41;
+        }
+    </style>
+</head>
+<body>
+<h1>修改图书信息</h1>
+<form action="{% url 'after:update_book' %} }" method="POST" id="image-form">
+    {% csrf_token %}
+    <table>
+        <tr>
+            <th>ID</th>
+            <td><input type="text" name="id" value="{{ book.id }}" readonly></td>
+        </tr>
+        <tr>
+            <th>创建时间</th>
+            <td><input type="text" value="{{ book.created_time}}" readonly></td>
+        </tr>
+        <tr>
+            <th>图书名称</th>
+            <td><input type="text" id="name" name="name" value="{{ book.bookname}}"></td>
+        </tr>
+        <tr>
+            <th>图书作者</th>
+            <td><input type="text" id="author" name="author" value="{{ book.author}}"></td>
+        </tr>
+        <tr>
+            <th>图书分类</th>
+            <td><input type="text" name="category" value="{{ book.category.name}}" readonly></td>
+        </tr>
+        <tr>
+            <th>图书价格</th>
+            <td><input type="number" id="price" name="price" value="{{ book.bookprice}}" step="0.01"></td>
+        </tr>
+        <tr>
+            <th>出版社</th>
+            <td><input type="text" id="publisher" name="publisher" value="{{ book.press}}"></td>
+        </tr>
+        <tr>
+            <th>图书描述</th>
+            <td><textarea id="description" name="description">{{ book.descrition }}</textarea></td>
+        </tr>
+        <tr>
+            <th>封面图片</th>
+            <td><input type="file" id="cover" name="cover"></td>
+        </tr>
+        <tr>
+            <td colspan="2"><input type="submit" value="提交"></td>
+        </tr>
+    </table>
+</form>
+</body>
+<script>
+    //修改书籍
+    $(document).ready(function() {
+        $('#image-form').submit(function(event) {
+            event.preventDefault();
+            var formData = new FormData(this);
+            $.ajax({
+                url: '{% url 'after:update_book' %}',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    console.log(response);
+                    alert('修改成功')
+                    window.location = '{% url 'after:book_manage' %}';
+                },
+                error: function(xhr, status, error) {
+                    console.log(error);
+                }
+            });
+        });
+    });
+</script>
+</html>
